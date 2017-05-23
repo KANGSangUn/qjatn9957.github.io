@@ -1,0 +1,13 @@
+#gameTable{
+    width: 600px;
+    height: 600px;
+    background-color : gray;
+}
+#player, .bullet{
+    background-color : black;
+    border-radius: 50%;
+    position: absolute;
+}
+iframe{
+    width : 100%;
+}

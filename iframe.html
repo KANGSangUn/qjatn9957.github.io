@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body id="table">
+    <div class="bullet"></div>
+    <div id="aa"></div>
+    <input type="text" id="btext">
+    <script src="Objects.js"></script>
+    <script>
+        var playerObj = new Player();
+        playerObj.move(new Point(MAX_WIDTH / 2, MAX_HEIGHT / 2));
+
+        var bulletArr = [];
+        bulletArr.length = INI_B_NUM;
+
+        var keypress = {};
+
+        document.onkeydown = function(e){
+            keypress[e.which.toString()] = true;
+        }
+        document.onkeyup = function(e){
+            keypress[e.which.toString()] = false;
+        }
+        //amount of bullet
+        var sTime = new Date().getTime();
+        var bcount = 0;
+        var timeCount = 0;
+        function game(){
+            if(timeCount % 1000 == 0){
+                bulletArr.length++;
+                document.getElementById("btext").value = bulletArr.length;
+            }
+            for(var i = 0; i < bulletArr.length; i++){
+                if(bulletArr[i] == undefined){
+                    var temp =  parseInt(Math.random() * 3);
+                    switch(temp){
+                        case 0:
+                            bulletArr[i] = new ToPlayer(
+                                new Point(Math.random() * MAX_WIDTH, 0),
+                                B_RADIUS,
+                                B_SPD_MIN + timeCount / 10000
+                            );
+                            break;
+                        case 1:
+                            bulletArr[i] = new XAxis(
+                                new Point(Math.random() * MAX_WIDTH, parseInt(Math.random() * 2) == 0 ? 0 : MAX_HEIGHT),
+                                B_RADIUS,
+                                B_SPD_MIN + timeCount / 10000
+                            );
+                            break;
+                        case 2:
+                            bulletArr[i] = new YAxis(
+                                new Point(parseInt(Math.random() * 2) == 0 ? 0 : MAX_WIDTH ,Math.random() * MAX_HEIGHT),
+                                B_RADIUS,
+                                B_SPD_MIN + timeCount / 10000
+                            );
+                            break;
+                        case 3:
+                            bulletArr[i] = new FollowPlayer(
+                                new Point(Math.random() * MAX_WIDTH , Math.random() * MAX_HEIGHT),
+                                B_RADIUS,
+                                B_SPD_MIN + timeCount / 10000
+                            );
+                            break;
+                    }
+                }
+            }
+            for(var i in bulletArr){
+                bulletArr[i].move(new Point(bulletArr[i].xpos, bcount));
+                bcount++;
+                if(bulletArr[i].bRemove()){
+                    bulletArr[i] = undefined;
+                }
+            }
+            //move player
+            if(keypress[KEY_LEFT]) playerObj.move(new Point(playerObj.xpos - 1, playerObj.ypos));
+            if(keypress[KEY_RIGHT]) playerObj.move(new Point(playerObj.xpos + 1, playerObj.ypos));
+            if(keypress[KEY_TOP]) playerObj.move(new Point(playerObj.xpos, playerObj.ypos - 1));
+            if(keypress[KEY_BOTTOM]) playerObj.move(new Point(playerObj.xpos, playerObj.ypos + 1)); 
+
+            // game over condition
+            for(var i in bulletArr){
+                if(bulletArr[i] == undefined);
+                else if(bulletArr[i].getDistanceWith(playerObj) < bulletArr[i].radius){
+                    clearInterval(any);
+                    var eTime = (new Date().getTime() - sTime) / 1000;
+                    alert('GAME OVER\n' + eTime + ' sec');
+                    break;
+                }
+            }
+            timeCount++;
+        }
+        var any = setInterval(game, 1);
+    </script>
+</body>
+</html> 
