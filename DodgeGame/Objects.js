@@ -204,11 +204,19 @@ FollowPlayer.prototype.constructor = FollowPlayer;
 FollowPlayer.prototype.move = function(){
     HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
 
+    const MAX_B_SPD = 1;
+
     this.xTarget = playerObj.xpos;
     this.yTarget = playerObj.ypos;
 
-    this.xSpeed = this.xSpeed + (this.xTarget - this.xpos) / 1000 * this.speed;
-    this.ySpeed = this.ySpeed + (this.yTarget - this.ypos) / 1000 * this.speed;
+    var xSTemp = this.xSpeed + (this.xTarget - this.xpos) / 1000 * this.speed;
+    var ySTemp = this.ySpeed + (this.yTarget - this.ypos) / 1000 * this.speed;
+    
+    this.xSpeed = xSTemp > MAX_B_SPD ? MAX_B_SPD : xSTemp < -MAX_B_SPD ? -MAX_B_SPD : xSTemp;
+    this.ySpeed = ySTemp > MAX_B_SPD ? MAX_B_SPD : ySTemp < -MAX_B_SPD ? -MAX_B_SPD : ySTemp;
+
+    // this.xSpeed = this.xSpeed + (this.xTarget - this.xpos) / 1000 * this.speed;
+    // this.ySpeed = this.ySpeed + (this.yTarget - this.ypos) / 1000 * this.speed;
 }
 
 //player Follow Object.move method
