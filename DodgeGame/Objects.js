@@ -204,20 +204,37 @@ FollowPlayer.prototype.constructor = FollowPlayer;
 FollowPlayer.prototype.move = function(){
     HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
 
-    const MAX_B_SPD = 1;
-
     this.xTarget = playerObj.xpos;
     this.yTarget = playerObj.ypos;
-
-    var xSTemp = this.xSpeed + (this.xTarget - this.xpos) / 1000 * this.speed;
-    var ySTemp = this.ySpeed + (this.yTarget - this.ypos) / 1000 * this.speed;
     
-    this.xSpeed = xSTemp > MAX_B_SPD ? MAX_B_SPD : xSTemp < -MAX_B_SPD ? -MAX_B_SPD : xSTemp;
-    this.ySpeed = ySTemp > MAX_B_SPD ? MAX_B_SPD : ySTemp < -MAX_B_SPD ? -MAX_B_SPD : ySTemp;
+    this.xSpeed += this.xpos < this.xTarget ? 0.005 : -0.005;
+    this.ySpeed += this.ypos < this.yTarget ? 0.005 : -0.005;
+};
 
-    // this.xSpeed = this.xSpeed + (this.xTarget - this.xpos) / 1000 * this.speed;
-    // this.ySpeed = this.ySpeed + (this.yTarget - this.ypos) / 1000 * this.speed;
-}
+ThunderBullet = function(argPoint, radius, speed){
+    Bullet.call(this, argPoint, radius);
+    this.type = 'ThunderBullet';
+
+    this.speed = speed;
+
+    this.xTarget = Math.random() * MAX_WIDTH;
+    this.yTarget = Math.random() * MAX_HEIGHT;
+
+    this.xSpeed = speed;
+    this.ySpeed = speed;
+
+    this.setColor('yellow');
+};
+ThunderBullet.prototype = new Bullet();
+ThunderBullet.prototype.constructor = ThunderBullet;
+
+ThunderBullet.prototype.move = function(){
+    
+    if(timeCount % 500 < 100){
+        HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
+    }
+};
+
 
 //player Follow Object.move method
 // FollowPlayer.prototype.move = function(){

@@ -33,12 +33,13 @@
         var timeCount = 0;
         function game(){
             if(timeCount % 1000 == 0){
+            // if(new Date().getTime() - sTime % 1000 == 0){
                 bulletArr.length++;
                 document.getElementById("btext").value = bulletArr.length;
             }
             for(var i = 0; i < bulletArr.length; i++){
                 if(bulletArr[i] == undefined){
-                    var temp =  parseInt(Math.random() * 4);
+                    var temp =  parseInt(Math.random() * 5);
                     switch(temp){
                         case 0:
                             bulletArr[i] = new ToPlayer(
@@ -63,6 +64,13 @@
                             break;
                         case 3:
                             bulletArr[i] = new FollowPlayer(
+                                new Point(Math.random() * MAX_WIDTH , Math.random() * MAX_HEIGHT),
+                                B_RADIUS,
+                                B_SPD_MIN + timeCount / 10000
+                            );
+                            break;
+                        case 4:
+                        bulletArr[i] = new ThunderBullet(
                                 new Point(Math.random() * MAX_WIDTH , Math.random() * MAX_HEIGHT),
                                 B_RADIUS,
                                 B_SPD_MIN + timeCount / 10000
