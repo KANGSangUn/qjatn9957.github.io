@@ -43,8 +43,8 @@ function Point(){
 function HitArea(argPoint, radius){
     Point.call(this, argPoint);
     //speed of x, y
-    this.xSpeed;
-    this.ySpeed;
+    this.xVector;
+    this.yVector;
     //location of target
     this.xTarget;
     this.yTarget;
@@ -144,14 +144,14 @@ function ToPlayer(argPoint, radius, speed){
     this.yTarget = playerObj.ypos;
 
     //set Bullet speed;
-    this.xSpeed = (this.xTarget - this.xpos) / 1000 * speed;
-    this.ySpeed = (this.yTarget - this.ypos) / 1000 * speed;
+    this.xVector = (this.xTarget - this.xpos) / 1000 * speed;
+    this.yVector = (this.yTarget - this.ypos) / 1000 * speed;
 }
 ToPlayer.prototype = new Bullet();
 ToPlayer.prototype.constructor = ToPlayer;
 
 ToPlayer.prototype.move = function(){
-        HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
+        HitArea.prototype.move.call(this, new Point(this.xpos + this.xVector, this.ypos + this.yVector));
 }
 //ToPlayer class
 function XAxis(argPoint, radius, speed){
@@ -160,14 +160,14 @@ function XAxis(argPoint, radius, speed){
     this.yTarget = this.ypos == 0 ? MAX_HEIGHT : 0;
 
     //set Bullet speed;
-    this.xSpeed = 0;
-    this.ySpeed = (this.yTarget - this.ypos) / 1000 * speed;
+    this.xVector = 0;
+    this.yVector = (this.yTarget - this.ypos) / 1000 * speed;
 }
 XAxis.prototype = new Bullet();
 XAxis.prototype.constructor = XAxis;
 
 XAxis.prototype.move = function(){
-    HitArea.prototype.move.call(this, new Point(this.xpos, this.ypos + this.ySpeed));
+    HitArea.prototype.move.call(this, new Point(this.xpos, this.ypos + this.yVector));
 }
 //XAxis class
 function YAxis(argPoint, radius, speed){
@@ -176,14 +176,14 @@ function YAxis(argPoint, radius, speed){
     this.xTarget = this.xpos == 0 ? MAX_WIDTH : 0;
 
     //set Bullet speed;
-    this.xSpeed = (this.xTarget - this.xpos) / 1000 * speed;
-    this.ySpeed = 0;
+    this.xVector = (this.xTarget - this.xpos) / 1000 * speed;
+    this.yVector = 0;
 }
 YAxis.prototype = new Bullet();
 YAxis.prototype.constructor = YAxis;
 
 YAxis.prototype.move = function(){
-    HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos));
+    HitArea.prototype.move.call(this, new Point(this.xpos + this.xVector, this.ypos));
 }
 //YAxis class
 function FollowPlayer(argPoint, radius, speed){
@@ -194,21 +194,21 @@ function FollowPlayer(argPoint, radius, speed){
     this.xTarget = playerObj.xpos;
     this.yTarget = playerObj.ypos;
 
-    this.xSpeed = (this.xTarget - this.xpos) / 1000 * speed;
-    this.ySpeed = (this.yTarget - this.ypos) / 1000 * speed;
+    this.xVector = (this.xTarget - this.xpos) / 1000 * speed;
+    this.yVector = (this.yTarget - this.ypos) / 1000 * speed;
     this.setColor('navy');
 }
 FollowPlayer.prototype = new Bullet();
 FollowPlayer.prototype.constructor = FollowPlayer;
 
 FollowPlayer.prototype.move = function(){
-    HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
+    HitArea.prototype.move.call(this, new Point(this.xpos + this.xVector, this.ypos + this.yVector));
 
     this.xTarget = playerObj.xpos;
     this.yTarget = playerObj.ypos;
     
-    this.xSpeed += this.xpos < this.xTarget ? 0.005 : -0.005;
-    this.ySpeed += this.ypos < this.yTarget ? 0.005 : -0.005;
+    this.xVector += this.xpos < this.xTarget ? 0.005 : -0.005;
+    this.yVector += this.ypos < this.yTarget ? 0.005 : -0.005;
 };
 
 ThunderBullet = function(argPoint, radius, speed){
@@ -220,8 +220,8 @@ ThunderBullet = function(argPoint, radius, speed){
     this.xTarget = Math.random() * MAX_WIDTH;
     this.yTarget = Math.random() * MAX_HEIGHT;
 
-    this.xSpeed = speed;
-    this.ySpeed = speed;
+    this.xVector = speed;
+    this.yVector = speed;
 
     this.setColor('yellow');
 };
@@ -231,18 +231,26 @@ ThunderBullet.prototype.constructor = ThunderBullet;
 ThunderBullet.prototype.move = function(){
     
     if(timeCount % 500 < 100){
-        HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
+        HitArea.prototype.move.call(this, new Point(this.xpos + this.xVector, this.ypos + this.yVector));
     }
 };
 
 
 //player Follow Object.move method
 // FollowPlayer.prototype.move = function(){
-//     HitArea.prototype.move.call(this, new Point(this.xpos + this.xSpeed, this.ypos + this.ySpeed));
+//     HitArea.prototype.move.call(this, new Point(this.xpos + this.xVector, this.ypos + this.yVector));
 
 //     this.xTarget = playerObj.xpos;
 //     this.yTarget = playerObj.ypos;
 
-//     this.xSpeed = (this.xTarget - this.xpos) / 1000 * this.speed;
-//     this.ySpeed = (this.yTarget - this.ypos) / 1000 * this.speed;
+//     this.xVector = (this.xTarget - this.xpos) / 1000 * this.speed;
+//     this.yVector = (this.yTarget - this.ypos) / 1000 * this.speed;
 // }
+
+
+
+//---------------------------------------
+function Vector(p1, p2){
+    this.xValue = p1.xpos - p2.xpos;
+    this.yValue = p1.ypos - p2.ypos;
+}
